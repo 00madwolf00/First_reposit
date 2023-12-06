@@ -25,8 +25,9 @@ class AppController:
 
     def compute_rt60(self):
         # Compute RT60 and update view with results
+        pass
 
-# This should be at the module level, not inside the class
+# This should be outside and at the end of the class definition
 if __name__ == "__main__":
     app = AppController()
     app.run()
