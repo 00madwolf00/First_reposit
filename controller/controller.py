@@ -8,26 +8,20 @@ class AppController:
         self.root = tk.Tk()
         self.view = MainApplication(self.root, self)
         self.audio_file = None
-
-    def run(self):
-        self.root.title("SPIDAM Project")
-        self.root.mainloop()
+        self.audio_analyzer = None
 
     def load_audio_file(self, file_path):
         self.audio_file = AudioFile(file_path)
         self.audio_file.load_audio()
         self.audio_file.convert_to_wav()
-        # Update view with audio file info
+        self.audio_file.remove_metadata()
+        waveform_data = self.audio_file.get_waveform_data()
+        self.view.plot_waveform(waveform_data)
 
-    def analyze_audio(self):
-        analyzer = AudioAnalyzer(self.audio_file.audio_data)
-        # Perform analysis and update view with results
+    def run(self):
+        self.root.title("SPIDAM Project")
+        self.root.mainloop()
 
-    def compute_rt60(self):
-        # Compute RT60 and update view with results
-        pass
-
-# This should be outside and at the end of the class definition
 if __name__ == "__main__":
     app = AppController()
     app.run()
