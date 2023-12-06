@@ -37,3 +37,18 @@ class MainApplication(tk.Frame):
             print("No waveform data to plot")
 
         # Other methods for displaying RT60, etc., can be added here
+
+    def create_info_labels(self):
+        self.duration_label = tk.Label(self, text="Duration: Not Available")
+        self.duration_label.pack()
+
+        self.frequency_label = tk.Label(self, text="Frequency of Greatest Amplitude: Not Available")
+        self.frequency_label.pack()
+
+        self.rt60_label = tk.Label(self, text="RT60 Difference: Not Available")
+        self.rt60_label.pack()
+
+    def update_audio_info(self, duration, frequency, rt60):
+        self.duration_label.config(text=f"Duration: {duration} seconds")
+        self.frequency_label.config(text=f"Frequency of Greatest Amplitude: {frequency}")
+        self.rt60_label.config(text=f"RT60 Difference: {rt60}")

@@ -34,9 +34,13 @@ class AudioAnalyzer:
         self.audio_data = audio_data
 
     def calculate_rt60(self):
-        # RT60 calculation logic
-        pass
+        # Dummy implementation
+        return "RT60 Value"
 
     def analyze_frequencies(self):
-        # Frequency analysis logic
-        pass
+        # Dummy implementation
+        return "Frequency of Greatest Amplitude"
+
+    def get_duration(self):
+        # Assuming duration is stored in self.audio_data
+        return len(self.audio_data) / 1000.0  # Duration in seconds
