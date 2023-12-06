@@ -26,8 +26,10 @@ class AudioFile:
     def get_waveform_data(self):
         if self.audio_data:
             samples = np.array(self.audio_data.get_array_of_samples())
-            return samples
-        return None
+            # Calculate time for each sample
+            time = np.linspace(0, len(self.audio_data) / 1000.0, num=len(samples))
+            return time, samples
+        return None, None
 
 class AudioAnalyzer:
     def __init__(self, audio_data):

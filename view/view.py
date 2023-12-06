@@ -28,14 +28,16 @@ class MainApplication(tk.Frame):
 
     def plot_waveform(self, waveform_data):
         if waveform_data is not None:
+            time, samples = waveform_data
             fig, ax = plt.subplots()
-            ax.plot(waveform_data)
+            ax.plot(time, samples)
+            ax.set_xlabel('Time (seconds)')
+            ax.set_ylabel('Amplitude')
             canvas = FigureCanvasTkAgg(fig, master=self)
             canvas.draw()
             canvas.get_tk_widget().pack()
         else:
             print("No waveform data to plot")
-
         # Other methods for displaying RT60, etc., can be added here
 
     def create_info_labels(self):
