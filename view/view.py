@@ -8,47 +8,72 @@ class MainApplication(tk.Frame):
     def __init__(self, master, controller):
         tk.Frame.__init__(self, master)
         self.controller = controller
-        self.pack()
+        self.current_plot = 0
         self.create_widgets()
+        self.create_plots()
+        self.pack()
 
     def create_widgets(self):
+        self.prev_button = tk.Button(self, text="Previous", command=self.show_previous_plot)
+        self.prev_button.pack(side=tk.LEFT)
+
         self.load_button = tk.Button(self, text="Load Audio", command=self.load_audio)
-        self.load_button.pack()
+        self.load_button.pack(side=tk.LEFT)
 
-        self.file_info_label = tk.Label(self, text="No file loaded")
-        self.file_info_label.pack()
+        self.next_button = tk.Button(self, text="Next", command=self.show_next_plot)
+        self.next_button.pack(side=tk.LEFT)
 
-        # Additional widgets can be added here
+    def create_plots(self):
+        self.plots = []
+
+        fig_waveform, ax_waveform = plt.subplots()
+        self.plots.append(FigureCanvasTkAgg(fig_waveform, master=self))
+
+        fig_low, ax_low = plt.subplots()
+        self.plots.append(FigureCanvasTkAgg(fig_low, master=self))
+
+        fig_mid, ax_mid = plt.subplots()
+        self.plots.append(FigureCanvasTkAgg(fig_mid, master=self))
+
+        fig_high, ax_high = plt.subplots()
+        self.plots.append(FigureCanvasTkAgg(fig_high, master=self))
+
+        for canvas in self.plots:
+            canvas.get_tk_widget().pack_forget()
+
+        self.plots[self.current_plot].get_tk_widget().pack()
 
     def load_audio(self):
         file_path = filedialog.askopenfilename(filetypes=[("Audio Files", "*.wav *.mp3")])
         if file_path:
             self.controller.load_audio_file(file_path)
-            self.file_info_label.config(text=f"Loaded File: {file_path.split('/')[-1]}")
 
     def plot_waveform(self, waveform_data):
         if waveform_data is not None:
-            fig, ax = plt.subplots()
-            ax.plot(waveform_data)
-            canvas = FigureCanvasTkAgg(fig, master=self)
-            canvas.draw()
-            canvas.get_tk_widget().pack()
-        else:
-            print("No waveform data to plot")
+            time, samples = waveform_data
+            ax = self.plots[0].figure.axes[0]
+            ax.clear()
+            ax.plot(time, samples)
+            ax.set_xlabel('Time (seconds)')
+            ax.set_ylabel('Amplitude')
+            self.plots[0].draw()
 
-        # Other methods for displaying RT60, etc., can be added here
+    def plot_resonance(self, freq_band, data):
+        index = {"low": 1, "mid": 2, "high": 3}.get(freq_band)
+        ax = self.plots[index].figure.axes[0]
+        ax.clear()
+        ax.plot(*data)
+        ax.set_xlabel('Frequency (Hz)')
+        ax.set_ylabel('Amplitude')
+        ax.set_title(f'{freq_band.capitalize()} Frequency Resonance')
+        self.plots[index].draw()
 
-    def create_info_labels(self):
-        self.duration_label = tk.Label(self, text="Duration: Not Available")
-        self.duration_label.pack()
+    def show_previous_plot(self):
+        self.plots[self.current_plot].get_tk_widget().pack_forget()
+        self.current_plot = (self.current_plot - 1) % len(self.plots)
+        self.plots[self.current_plot].get_tk_widget().pack()
 
-        self.frequency_label = tk.Label(self, text="Frequency of Greatest Amplitude: Not Available")
-        self.frequency_label.pack()
-
-        self.rt60_label = tk.Label(self, text="RT60 Difference: Not Available")
-        self.rt60_label.pack()
-
-    def update_audio_info(self, duration, frequency, rt60):
-        self.duration_label.config(text=f"Duration: {duration} seconds")
-        self.frequency_label.config(text=f"Frequency of Greatest Amplitude: {frequency}")
-        self.rt60_label.config(text=f"RT60 Difference: {rt60}")
+    def show_next_plot(self):
+        self.plots[self.current_plot].get_tk_widget().pack_forget()
+        self.current_plot = (self.current_plot + 1) % len(self.plots)
+        self.plots[self.current_plot].get_tk_widget().pack()
