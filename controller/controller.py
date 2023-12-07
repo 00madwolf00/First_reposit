@@ -39,6 +39,20 @@ class AppController:
                 (high_frequencies, high_resonance)
             )
 
+    def combine_and_plot(self):
+        if self.audio_analyzer:
+            low_resonance = self.audio_analyzer.calculate_resonance("low")
+            mid_resonance = self.audio_analyzer.calculate_resonance("mid")
+            high_resonance = self.audio_analyzer.calculate_resonance("high")
+
+            # Combine the resonance data here as needed
+
+            self.view.plot_combined_resonance(
+                low_resonance,
+                mid_resonance,
+                high_resonance
+            )
+
     def run(self):
         self.root.title("Audio Analysis App")
         self.root.mainloop()
