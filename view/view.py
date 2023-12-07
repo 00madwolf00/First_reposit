@@ -23,6 +23,9 @@ class MainApplication(tk.Frame):
         self.next_button = tk.Button(self, text="Next", command=self.show_next_plot)
         self.next_button.pack(side=tk.LEFT)
 
+        self.file_label = tk.Label(self, text="No file selected")
+        self.file_label.pack(side=tk.LEFT)
+
     def create_plots(self):
         self.plots = []
 
@@ -43,10 +46,19 @@ class MainApplication(tk.Frame):
 
         self.plots[self.current_plot].get_tk_widget().pack()
 
+        fig_combined, ax_combined = plt.subplots()
+        self.plots.append(FigureCanvasTkAgg(fig_combined, master=self))
+
+        for canvas in self.plots:
+            canvas.get_tk_widget().pack_forget()
+
+        self.plots[self.current_plot].get_tk_widget().pack()
+
     def load_audio(self):
         file_path = filedialog.askopenfilename(filetypes=[("Audio Files", "*.wav *.mp3")])
         if file_path:
             self.controller.load_audio_file(file_path)
+            self.file_label.config(text=f"Loaded File: {file_path.split('/')[-1]}")
 
     def plot_waveform(self, waveform_data):
         if waveform_data is not None:
@@ -67,6 +79,18 @@ class MainApplication(tk.Frame):
         ax.set_ylabel('Amplitude')
         ax.set_title(f'{freq_band.capitalize()} Frequency Resonance')
         self.plots[index].draw()
+
+    def plot_combined_resonance(self, low_data, mid_data, high_data):
+        ax = self.plots[4].figure.axes[0]
+        ax.clear()
+        ax.plot(*low_data, color='blue', label='Low Frequency')
+        ax.plot(*mid_data, color='green', label='Mid Frequency')
+        ax.plot(*high_data, color='red', label='High Frequency')
+        ax.set_xlabel('Frequency (Hz)')
+        ax.set_ylabel('Amplitude')
+        ax.set_title('Combined Frequency Resonance')
+        ax.legend()
+        self.plots[4].draw()
 
     def show_previous_plot(self):
         self.plots[self.current_plot].get_tk_widget().pack_forget()

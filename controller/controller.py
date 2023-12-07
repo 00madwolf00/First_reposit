@@ -23,9 +23,21 @@ class AppController:
         if self.audio_file and self.audio_file.audio_data:
             self.audio_analyzer = AudioAnalyzer(self.audio_file.audio_data)
 
-            for band in ["low", "mid", "high"]:
-                frequencies, resonance = self.audio_analyzer.calculate_resonance(band)
-                self.view.plot_resonance(band, (frequencies, resonance))
+            low_frequencies, low_resonance = self.audio_analyzer.calculate_resonance("low")
+            mid_frequencies, mid_resonance = self.audio_analyzer.calculate_resonance("mid")
+            high_frequencies, high_resonance = self.audio_analyzer.calculate_resonance("high")
+
+            # Plot individual frequency bands
+            self.view.plot_resonance("low", (low_frequencies, low_resonance))
+            self.view.plot_resonance("mid", (mid_frequencies, mid_resonance))
+            self.view.plot_resonance("high", (high_frequencies, high_resonance))
+
+            # Plot combined frequency bands
+            self.view.plot_combined_resonance(
+                (low_frequencies, low_resonance),
+                (mid_frequencies, mid_resonance),
+                (high_frequencies, high_resonance)
+            )
 
     def run(self):
         self.root.title("Audio Analysis App")
