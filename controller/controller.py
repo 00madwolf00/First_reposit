@@ -55,7 +55,7 @@ class AppController:
             )
 
             # Pass the combined resonance data to the MainApplication
-            self.view.combine_and_plot(combined_resonance_data)
+            self.view.combine_and_plot(*combined_resonance_data)  # Unpack the tuple elements
 
     def run(self):
         self.root.title("Audio Analysis App")

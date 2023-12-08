@@ -107,4 +107,3 @@ class MainApplication(tk.Frame):
     def combine_and_plot(self, combined_resonance_data):
         # Plot the combined resonance data
         self.plot_combined_resonance(*combined_resonance_data)
-        pass
