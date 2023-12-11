@@ -22,9 +22,6 @@ class MainApplication(tk.Frame):
         self.next_button = tk.Button(self, text="Next", command=self.show_next_plot)
         self.next_button.pack(side=tk.LEFT)
 
-        self.combine_button = tk.Button(self, text="Combine Plots", command=self.combine_and_plot)
-        self.combine_button.pack(side=tk.LEFT)
-
         self.file_label = tk.Label(self, text="No file selected")
         self.file_label.pack(side=tk.LEFT)
 
@@ -104,6 +101,3 @@ class MainApplication(tk.Frame):
         self.current_plot = (self.current_plot + 1) % len(self.plots)
         self.plots[self.current_plot].get_tk_widget().pack()
 
-    def combine_and_plot(self, combined_resonance_data):
-        # Plot the combined resonance data
-        self.plot_combined_resonance(*combined_resonance_data)
