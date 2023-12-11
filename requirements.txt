@@ -1,0 +1,6 @@
+Install / impliment these before attempting to run the program
+
+numpy :pip install numpy
+matplotlib :pip install matplotlib
+pydub :pip install pydub
+FFmpeg : i cant help you install this one. too many steps try youtube.unless on mac in which case use homebrew and  paste brew install ffmpeg
